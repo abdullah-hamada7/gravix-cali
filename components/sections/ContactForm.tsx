@@ -29,7 +29,7 @@ export default function ContactForm() {
   const [globalMessage, setGlobalMessage] = useState("");
 
   const { ref: refHeading, animationClasses: animHeading } = useInView({ threshold: 0.2 });
-  const { ref: refForm, animationClasses: animForm } = useInView({ threshold: 0.1, direction: "up" });
+  const { ref: refForm, animationClasses: animForm } = useInView<HTMLFormElement>({ threshold: 0.1, direction: "up" });
   const { ref: refMap, animationClasses: animMap } = useInView({ threshold: 0.1 });
 
   const handleSubmit = async (e: FormEvent) => {
