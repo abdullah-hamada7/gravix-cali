@@ -1,0 +1,12 @@
+.next/
+node_modules/
+*.log
+.env*.local
+.DS_Store
+Thumbs.db
+*.tmp
+.vscode/
+.idea/
+.opencode/
+specs/
+.specify/
