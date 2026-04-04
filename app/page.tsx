@@ -17,9 +17,9 @@ export default function Home() {
       <FAQ />
       <ContactForm />
       <Section className="border-t border-emerald/40 py-6" dark>
-        <div className="flex flex-col gap-4 text-center md:flex-row md:items-center md:justify-between md:text-right">
+        <div className="flex flex-col gap-4 text-center md:flex-row md:items-center md:justify-between">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-lime">
-            {landingContent.hero.eyebrow}
+            جراڤيكس كاليستينكس
           </p>
           <div className="flex items-center gap-6">
             <a
@@ -35,7 +35,7 @@ export default function Home() {
             </a>
           </div>
           <p className="text-sm text-neutral-mid">
-            {landingContent.contact.title}. الانضباط فوق الضجيج.
+            © {new Date().getFullYear()} جراڤيكس كاليستينكس. الانضباط فوق الضجيج.
           </p>
         </div>
       </Section>

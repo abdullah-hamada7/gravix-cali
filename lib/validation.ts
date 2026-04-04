@@ -18,18 +18,18 @@ export function validateField(
 ): string | undefined {
   switch (name) {
     case "name":
-      if (!value.trim()) return "الاسم مطلوب.";
+      if (!value.trim()) return "اكتب اسمك هنا.";
       return undefined;
     case "email":
-      if (!value.trim()) return "البريد الإلكتروني مطلوب.";
+      if (!value.trim()) return "اكتب بريدك الإلكتروني.";
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
-        return "أدخل بريدًا إلكترونيًا صحيحًا.";
+        return "البريد غير صحيح. مثال: name@example.com";
       return undefined;
     case "trainingLevel":
-      if (!value) return "اختر مستوى التدريب.";
+      if (!value) return "اختر مستواك الحالي.";
       return undefined;
     case "goal":
-      if (!value.trim()) return "أخبرنا عن هدفك الأساسي.";
+      if (!value.trim()) return "اكتب هدفك — مثال: أول عضلة أب أو وقوف على اليدين.";
       return undefined;
     default:
       return undefined;

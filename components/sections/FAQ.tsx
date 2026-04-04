@@ -19,7 +19,7 @@ export default function FAQ() {
   return (
     <Section id="faq" eyebrow={faq.eyebrow} className="bg-forest">
       <div ref={refHeading} className={animHeading}>
-        <Heading level={2} className="mb-8">
+        <Heading level={2} className="mb-10">
             {faq.title}
         </Heading>
       </div>
@@ -36,10 +36,11 @@ export default function FAQ() {
                 <dt>
                   <button
                     onClick={() => toggle(i)}
-                    className="w-full flex items-center justify-between px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-lime focus:ring-inset"
+                    className="w-full flex items-center justify-between px-6 py-5 text-start focus:outline-none focus:ring-2 focus:ring-lime focus:ring-inset"
                     aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${i}`}
                   >
-                    <span className="text-white font-semibold text-sm md:text-base pr-4">
+                    <span className="text-white font-semibold text-sm md:text-base pe-4">
                       {item.question}
                     </span>
                     <span
@@ -49,12 +50,15 @@ export default function FAQ() {
                         transform: isOpen ? "rotate(45deg)" : "rotate(0)",
                       }}
                     >
-                      +
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                        <line x1="8" y1="3" x2="8" y2="13" />
+                        <line x1="3" y1="8" x2="13" y2="8" />
+                      </svg>
                     </span>
                   </button>
                 </dt>
                 {isOpen && (
-                  <dd className="px-6 pb-4 text-neutral-light text-sm leading-relaxed">
+                  <dd id={`faq-answer-${i}`} className="px-6 pb-5 text-neutral-light text-sm leading-relaxed">
                     {item.answer}
                   </dd>
                 )}

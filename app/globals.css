@@ -9,23 +9,11 @@ html {
 body {
   background-color: #050f05;
   color: #f0f2f0;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* Angular decorative utility */
-.shard-accent {
-  position: absolute;
-  pointer-events: none;
-  opacity: 0.08;
-  background: linear-gradient(
-    135deg,
-    transparent 40%,
-    #bfff00 40%,
-    #bfff00 41%,
-    transparent 41%
-  );
 }
 
 /* Focus ring override for brand consistency */
@@ -40,4 +28,16 @@ select,
 textarea,
 button {
   border-radius: 0;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

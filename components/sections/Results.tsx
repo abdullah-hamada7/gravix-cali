@@ -14,13 +14,13 @@ export default function Results() {
   return (
     <Section id="results" eyebrow={results.eyebrow} dark>
       <div ref={refHeading} className={animHeading}>
-        <Heading level={2} className="mb-8">
+        <Heading level={2} className="mb-10">
             {results.title}
         </Heading>
       </div>
 
         <div ref={refCards} className={animCards}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto min-w-0">
             {results.items.map((item, i: number) => (
               <Card
                 key={i}

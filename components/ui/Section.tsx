@@ -26,12 +26,12 @@ export default function Section({
     >
       <div className="max-w-6xl mx-auto relative">
         {eyebrow && (
-          <span className="block text-lime text-xs font-semibold uppercase tracking-widest mb-2">
+          <span className="block text-lime text-[0.75rem] font-semibold uppercase tracking-[0.15em] mb-2">
             {eyebrow}
           </span>
         )}
         {title && (
-          <h2 className="text-3xl md:text-4xl font-extrabold uppercase tracking-tight text-white mb-8">
+          <h2 className="font-heading text-[clamp(1.5rem,4vw,2.25rem)] font-extrabold uppercase tracking-tight text-white leading-[1.15] mb-8">
             {title}
           </h2>
         )}

@@ -33,7 +33,7 @@ export default function Header() {
     >
       <nav
         className="max-w-6xl mx-auto px-[clamp(1rem,4vw,2rem)] h-16 flex items-center justify-between"
-        aria-label="Primary navigation"
+        aria-label="التنقل الرئيسي"
       >
         <Link
           href="#hero"
@@ -76,7 +76,7 @@ export default function Header() {
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden text-lime p-2 focus:outline-none focus:ring-2 focus:ring-lime"
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-label={menuOpen ? "إغلاق القائمة" : "فتح القائمة"}
           aria-expanded={menuOpen}
         >
           <svg
@@ -106,7 +106,7 @@ export default function Header() {
       {/* Mobile menu */}
       <div
         className={`md:hidden bg-forest border-t border-emerald overflow-hidden transition-all duration-300 ease-in-out ${
-          menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          menuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <ul className="px-[clamp(1rem,4vw,2rem)] py-4 flex flex-col gap-3">
@@ -115,14 +115,14 @@ export default function Header() {
               {item.isPrimary ? (
                 <button
                   onClick={() => handleNavClick(item.href)}
-                  className="w-full text-right bg-lime text-forest font-bold uppercase tracking-wider text-sm px-4 py-3 border-2 border-lime hover:bg-limeBright transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-lime"
+                  className="w-full text-start bg-lime text-forest font-bold uppercase tracking-wider text-sm px-4 py-3 border-2 border-lime hover:bg-limeBright transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-lime"
                 >
                   {item.label}
                 </button>
               ) : (
                 <button
                   onClick={() => handleNavClick(item.href)}
-                  className="w-full text-right text-neutral-light uppercase tracking-wider text-sm font-semibold py-3 hover:text-lime transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-lime"
+                  className="w-full text-start text-neutral-light uppercase tracking-wider text-sm font-semibold py-3 hover:text-lime transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-lime"
                 >
                   {item.label}
                 </button>

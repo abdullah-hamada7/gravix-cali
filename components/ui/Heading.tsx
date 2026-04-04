@@ -7,9 +7,9 @@ interface HeadingProps {
 }
 
 const levelClasses: Record<number, string> = {
-  1: "text-4xl md:text-5xl lg:text-6xl font-extrabold uppercase tracking-tight",
-  2: "text-3xl md:text-4xl font-extrabold uppercase tracking-tight",
-  3: "text-xl md:text-2xl font-bold uppercase tracking-tight",
+  1: "text-[clamp(2rem,5vw,3.5rem)] font-extrabold uppercase tracking-tight leading-[1.1]",
+  2: "text-[clamp(1.5rem,4vw,2.25rem)] font-extrabold uppercase tracking-tight leading-[1.15]",
+  3: "text-[clamp(1.125rem,3vw,1.5rem)] font-bold uppercase tracking-wide leading-[1.2]",
 };
 
 export default function Heading({
@@ -20,7 +20,7 @@ export default function Heading({
   const Tag = `h${level}` as keyof React.JSX.IntrinsicElements;
 
   return (
-    <Tag className={`${levelClasses[level]} text-white ${className}`.trim()}>
+    <Tag className={`font-heading text-white ${levelClasses[level]} ${className}`.trim()}>
       {children}
     </Tag>
   );
