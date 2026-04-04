@@ -114,7 +114,7 @@ export default function ContactForm() {
   const fieldClass = (field: keyof FormFieldErrors) =>
     `w-full bg-forest-deep border ${
       fieldErrors[field] ? "border-red-500" : "border-emerald"
-    } text-neutral-light px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-lime focus:border-lime`;
+    } text-neutral-light px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-lime focus:border-lime transition-[border-color,box-shadow] duration-150 ease-out`;
 
   if (status === "success") {
     return (
@@ -185,7 +185,7 @@ export default function ContactForm() {
               aria-describedby={fieldErrors.name ? "cf-name-error" : undefined}
             />
             {fieldErrors.name && touched.name && (
-              <p id="cf-name-error" className="text-red-400 text-xs mt-1" role="alert">
+              <p id="cf-name-error" className="text-red-300 text-xs mt-1" role="alert">
                 {fieldErrors.name}
               </p>
             )}
@@ -212,7 +212,7 @@ export default function ContactForm() {
               aria-describedby={fieldErrors.email ? "cf-email-error" : undefined}
             />
             {fieldErrors.email && touched.email && (
-              <p id="cf-email-error" className="text-red-400 text-xs mt-1" role="alert">
+              <p id="cf-email-error" className="text-red-300 text-xs mt-1" role="alert">
                 {fieldErrors.email}
               </p>
             )}
@@ -241,7 +241,7 @@ export default function ContactForm() {
               <option value="advanced">متقدم</option>
             </select>
             {fieldErrors.trainingLevel && touched.trainingLevel && (
-              <p id="cf-level-error" className="text-red-400 text-xs mt-1" role="alert">
+              <p id="cf-level-error" className="text-red-300 text-xs mt-1" role="alert">
                 {fieldErrors.trainingLevel}
               </p>
             )}
@@ -267,7 +267,7 @@ export default function ContactForm() {
               aria-describedby={fieldErrors.goal ? "cf-goal-error" : undefined}
             />
             {fieldErrors.goal && touched.goal && (
-              <p id="cf-goal-error" className="text-red-400 text-xs mt-1" role="alert">
+              <p id="cf-goal-error" className="text-red-300 text-xs mt-1" role="alert">
                 {fieldErrors.goal}
               </p>
             )}

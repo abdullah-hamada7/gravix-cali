@@ -26,7 +26,7 @@ export default function Home() {
               href="https://www.instagram.com/m0hamed.elkholy/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-neutral-mid hover:text-lime transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-lime"
+              className="text-neutral-mid hover:text-lime transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-lime p-2"
               aria-label="إنستغرام"
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">

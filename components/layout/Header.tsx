@@ -25,7 +25,7 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-200 ${
         scrolled
           ? "bg-forest/95 backdrop-blur-sm border-b border-emerald"
           : "bg-forest border-b border-transparent"
@@ -37,7 +37,7 @@ export default function Header() {
       >
         <Link
           href="#hero"
-          className="flex items-center gap-3"
+          className="flex items-center gap-3 transition-opacity duration-150 hover:opacity-80"
           onClick={(e) => {
             e.preventDefault();
             handleNavClick("#hero");
@@ -56,14 +56,14 @@ export default function Header() {
               {item.isPrimary ? (
                 <button
                   onClick={() => handleNavClick(item.href)}
-                  className="bg-lime text-forest font-bold tracking-wider text-sm px-4 py-2 border-2 border-lime hover:bg-limeBright transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-lime focus:ring-offset-2 focus:ring-offset-forest"
+                  className="bg-lime text-forest font-bold tracking-wider text-sm px-4 py-2 border-2 border-lime hover:bg-limeBright active:scale-[0.97] transition-[background-color,color,transform] duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-lime focus:ring-offset-2 focus:ring-offset-forest"
                 >
                   {item.label}
                 </button>
               ) : (
                 <button
                   onClick={() => handleNavClick(item.href)}
-                  className="text-neutral-light tracking-wider text-sm font-semibold hover:text-lime transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-lime focus:ring-offset-2 focus:ring-offset-forest"
+                  className="text-neutral-light tracking-wider text-sm font-semibold hover:text-lime transition-colors duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-lime focus:ring-offset-2 focus:ring-offset-forest"
                 >
                   {item.label}
                 </button>
@@ -75,7 +75,7 @@ export default function Header() {
               href={`https://wa.me/201273550318`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-lime hover:text-limeBright transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-lime p-1"
+              className="text-lime hover:text-limeBright transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-lime p-2"
               aria-label="تواصل عبر واتساب"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -88,7 +88,7 @@ export default function Header() {
         {/* Mobile menu toggle */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-lime p-2 focus:outline-none focus:ring-2 focus:ring-lime"
+          className="md:hidden text-lime p-3 focus:outline-none focus:ring-2 focus:ring-lime"
           aria-label={menuOpen ? "إغلاق القائمة" : "فتح القائمة"}
           aria-expanded={menuOpen}
         >
@@ -118,7 +118,7 @@ export default function Header() {
 
       {/* Mobile menu */}
       <div
-        className={`md:hidden bg-forest border-t border-emerald overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`md:hidden bg-forest border-t border-emerald overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
           menuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >

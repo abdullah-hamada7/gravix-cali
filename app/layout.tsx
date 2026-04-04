@@ -46,8 +46,14 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={`${cairo.variable} ${tajawal.variable} bg-forest-deep text-neutral-light`}>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:right-4 focus:z-[100] focus:bg-lime focus:text-forest focus:px-4 focus:py-2 focus:text-sm focus:font-bold"
+        >
+          تخطي إلى المحتوى الرئيسي
+        </a>
         <Header />
-        <main>{children}</main>
+        <main id="main-content">{children}</main>
       </body>
     </html>
   );

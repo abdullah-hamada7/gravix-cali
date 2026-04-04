@@ -60,7 +60,7 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(options: UseIn
 
   const animationClasses = prefersReducedMotion
     ? "opacity-100"
-    : `transition-all duration-700 ease-out ${
+    : `transition-transform transition-opacity duration-700 ease-out ${
         isInView
           ? "opacity-100 translate-y-0 translate-x-0"
           : `opacity-0 ${directionStyles[direction]}`

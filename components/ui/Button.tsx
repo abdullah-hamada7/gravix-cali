@@ -15,7 +15,7 @@ interface ButtonProps {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-lime text-forest font-bold tracking-wider px-6 py-3 border-2 border-lime hover:bg-limeBright hover:text-forest transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-lime focus:ring-offset-2 focus:ring-offset-forest",
+    "bg-lime text-forest font-bold tracking-wider px-6 py-3 border-2 border-lime hover:bg-limeBright hover:text-forest active:scale-[0.97] transition-[background-color,color,transform] duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-lime focus:ring-offset-2 focus:ring-offset-forest will-change-transform",
 };
 
 export default function Button({

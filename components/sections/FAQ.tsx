@@ -31,10 +31,11 @@ export default function FAQ() {
             return (
               <div
                 key={i}
-                className="border border-emerald bg-forest-deep"
+                className="border border-emerald bg-forest-deep overflow-hidden"
               >
                 <dt>
                   <button
+                    id={`faq-question-${i}`}
                     onClick={() => toggle(i)}
                     className="w-full flex items-center justify-between px-6 py-5 text-start focus:outline-none focus:ring-2 focus:ring-lime focus:ring-inset"
                     aria-expanded={isOpen}
@@ -44,7 +45,7 @@ export default function FAQ() {
                       {item.question}
                     </span>
                     <span
-                      className="text-lime flex-shrink-0 transition-transform duration-200"
+                      className="text-lime flex-shrink-0 transition-transform duration-200 ease-out"
                       aria-hidden="true"
                       style={{
                         transform: isOpen ? "rotate(45deg)" : "rotate(0)",
@@ -57,11 +58,21 @@ export default function FAQ() {
                     </span>
                   </button>
                 </dt>
-                {isOpen && (
-                  <dd id={`faq-answer-${i}`} className="px-6 pb-5 text-neutral-light text-sm leading-relaxed">
-                    {item.answer}
-                  </dd>
-                )}
+                <dd
+                  id={`faq-answer-${i}`}
+                  role="region"
+                  aria-labelledby={`faq-question-${i}`}
+                  className="grid transition-[grid-template-rows] duration-300 ease-out"
+                  style={{
+                    gridTemplateRows: isOpen ? "1fr" : "0fr",
+                  }}
+                >
+                  <div className="overflow-hidden">
+                    <div className="px-6 pb-5 text-neutral-light text-sm leading-relaxed">
+                      {item.answer}
+                    </div>
+                  </div>
+                </dd>
               </div>
             );
           })}
