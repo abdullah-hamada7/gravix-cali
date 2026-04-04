@@ -17,7 +17,7 @@ export default function FAQ() {
   };
 
   return (
-    <Section id="faq" eyebrow={faq.eyebrow} className="bg-forest">
+    <Section id="faq" className="bg-forest">
       <div ref={refHeading} className={animHeading}>
         <Heading level={2} className="mb-10">
             {faq.title}

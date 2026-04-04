@@ -7,6 +7,7 @@ import Section from "@/components/ui/Section";
 import { landingContent } from "@/content/landing-page";
 import {
   validateForm,
+  validateField,
   hasErrors,
   type FormFieldErrors,
   type FormStatus,
@@ -24,9 +25,20 @@ export default function ContactForm() {
   const [goal, setGoal] = useState("");
   const [message, setMessage] = useState("");
 
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
   const [status, setStatus] = useState<FormStatus>("idle");
   const [fieldErrors, setFieldErrors] = useState<FormFieldErrors>({});
   const [globalMessage, setGlobalMessage] = useState("");
+
+  const validateAndSetError = (fieldName: string, value: string) => {
+    const error = validateField(fieldName, value);
+    setFieldErrors((prev) => ({ ...prev, [fieldName]: error }));
+  };
+
+  const handleBlur = (fieldName: string) => {
+    setTouched((prev) => ({ ...prev, [fieldName]: true }));
+  };
 
   const { ref: refHeading, animationClasses: animHeading } = useInView({ threshold: 0.2 });
   const { ref: refForm, animationClasses: animForm } = useInView<HTMLFormElement>({ threshold: 0.1, direction: "up" });
@@ -94,6 +106,7 @@ export default function ContactForm() {
 
   const handleReset = () => {
     setStatus("idle");
+    setTouched({});
     setFieldErrors({});
     setGlobalMessage("");
   };
@@ -105,7 +118,7 @@ export default function ContactForm() {
 
   if (status === "success") {
     return (
-      <Section id="contact" eyebrow={contact.eyebrow} dark>
+      <Section id="contact" dark>
         <div className="text-center">
           <Heading level={2} className="mb-6">
             تم إرسال طلبك
@@ -152,14 +165,18 @@ export default function ContactForm() {
         <form ref={refForm} className={animForm} onSubmit={handleSubmit} noValidate style={{ transitionDelay: "200ms" }} >
           <div className="max-w-lg space-y-5">
           <div>
-            <label htmlFor="cf-name" className="block text-neutral-mid text-xs font-semibold uppercase tracking-wider mb-1">
+            <label htmlFor="cf-name" className="block text-neutral-mid text-xs font-semibold tracking-wider mb-1">
               الاسم <span className="text-lime">*</span>
             </label>
             <input
               id="cf-name"
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (touched.name) validateAndSetError("name", e.target.value);
+              }}
+              onBlur={() => handleBlur("name")}
               maxLength={100}
               autoComplete="name"
               required
@@ -167,7 +184,7 @@ export default function ContactForm() {
               aria-invalid={!!fieldErrors.name}
               aria-describedby={fieldErrors.name ? "cf-name-error" : undefined}
             />
-            {fieldErrors.name && (
+            {fieldErrors.name && touched.name && (
               <p id="cf-name-error" className="text-red-400 text-xs mt-1" role="alert">
                 {fieldErrors.name}
               </p>
@@ -175,14 +192,18 @@ export default function ContactForm() {
           </div>
 
           <div>
-            <label htmlFor="cf-email" className="block text-neutral-mid text-xs font-semibold uppercase tracking-wider mb-1">
+            <label htmlFor="cf-email" className="block text-neutral-mid text-xs font-semibold tracking-wider mb-1">
               البريد الإلكتروني <span className="text-lime">*</span>
             </label>
             <input
               id="cf-email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (touched.email) validateAndSetError("email", e.target.value);
+              }}
+              onBlur={() => handleBlur("email")}
               maxLength={254}
               autoComplete="email"
               required
@@ -190,7 +211,7 @@ export default function ContactForm() {
               aria-invalid={!!fieldErrors.email}
               aria-describedby={fieldErrors.email ? "cf-email-error" : undefined}
             />
-            {fieldErrors.email && (
+            {fieldErrors.email && touched.email && (
               <p id="cf-email-error" className="text-red-400 text-xs mt-1" role="alert">
                 {fieldErrors.email}
               </p>
@@ -198,13 +219,17 @@ export default function ContactForm() {
           </div>
 
           <div>
-            <label htmlFor="cf-level" className="block text-neutral-mid text-xs font-semibold uppercase tracking-wider mb-1">
+            <label htmlFor="cf-level" className="block text-neutral-mid text-xs font-semibold tracking-wider mb-1">
               مستوى التدريب <span className="text-lime">*</span>
             </label>
             <select
               id="cf-level"
               value={trainingLevel}
-              onChange={(e) => setTrainingLevel(e.target.value)}
+              onChange={(e) => {
+                setTrainingLevel(e.target.value);
+                if (touched.trainingLevel) validateAndSetError("trainingLevel", e.target.value);
+              }}
+              onBlur={() => handleBlur("trainingLevel")}
               required
               className={fieldClass("trainingLevel")}
               aria-invalid={!!fieldErrors.trainingLevel}
@@ -215,7 +240,7 @@ export default function ContactForm() {
               <option value="intermediate">متوسط</option>
               <option value="advanced">متقدم</option>
             </select>
-            {fieldErrors.trainingLevel && (
+            {fieldErrors.trainingLevel && touched.trainingLevel && (
               <p id="cf-level-error" className="text-red-400 text-xs mt-1" role="alert">
                 {fieldErrors.trainingLevel}
               </p>
@@ -223,21 +248,25 @@ export default function ContactForm() {
           </div>
 
           <div>
-            <label htmlFor="cf-goal" className="block text-neutral-mid text-xs font-semibold uppercase tracking-wider mb-1">
+            <label htmlFor="cf-goal" className="block text-neutral-mid text-xs font-semibold tracking-wider mb-1">
               الهدف الأساسي <span className="text-lime">*</span>
             </label>
             <input
               id="cf-goal"
               type="text"
               value={goal}
-              onChange={(e) => setGoal(e.target.value)}
+              onChange={(e) => {
+                setGoal(e.target.value);
+                if (touched.goal) validateAndSetError("goal", e.target.value);
+              }}
+              onBlur={() => handleBlur("goal")}
               maxLength={200}
               placeholder="مثال: أول عضلة أب، وقوف على اليدين، قوة"
               className={fieldClass("goal")}
               aria-invalid={!!fieldErrors.goal}
               aria-describedby={fieldErrors.goal ? "cf-goal-error" : undefined}
             />
-            {fieldErrors.goal && (
+            {fieldErrors.goal && touched.goal && (
               <p id="cf-goal-error" className="text-red-400 text-xs mt-1" role="alert">
                 {fieldErrors.goal}
               </p>
@@ -245,7 +274,7 @@ export default function ContactForm() {
           </div>
 
           <div>
-            <label htmlFor="cf-message" className="block text-neutral-mid text-xs font-semibold uppercase tracking-wider mb-1">
+            <label htmlFor="cf-message" className="block text-neutral-mid text-xs font-semibold tracking-wider mb-1">
               الرسالة <span className="text-neutral-mid">(اختياري)</span>
             </label>
             <textarea
@@ -283,7 +312,7 @@ export default function ContactForm() {
 
         <div ref={refMap} className={animMap} style={{ transitionDelay: "300ms" }}>
           <div className="mt-16 max-w-lg">
-            <h3 className="text-lime text-sm font-bold uppercase tracking-wider mb-4">
+            <h3 className="text-lime text-sm font-bold tracking-wider mb-4">
               مقر جراڤيكس
             </h3>
             <div className="border border-emerald bg-forest-deep overflow-hidden">

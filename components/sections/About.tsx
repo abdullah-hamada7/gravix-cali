@@ -10,7 +10,7 @@ export default function About() {
   const { ref: refText, animationClasses: animText } = useInView({ threshold: 0.15, direction: "up" });
 
   return (
-    <Section id="about" eyebrow={about.eyebrow} dark>
+    <Section id="about" dark>
       <Heading level={2} className="mb-10">
         {about.title}
       </Heading>

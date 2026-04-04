@@ -1,5 +1,3 @@
-import React from "react";
-
 interface HeadingProps {
   level?: 1 | 2 | 3;
   children: React.ReactNode;
@@ -7,9 +5,9 @@ interface HeadingProps {
 }
 
 const levelClasses: Record<number, string> = {
-  1: "text-[clamp(2rem,5vw,3.5rem)] font-extrabold uppercase tracking-tight leading-[1.1]",
-  2: "text-[clamp(1.5rem,4vw,2.25rem)] font-extrabold uppercase tracking-tight leading-[1.15]",
-  3: "text-[clamp(1.125rem,3vw,1.5rem)] font-bold uppercase tracking-wide leading-[1.2]",
+  1: "text-[clamp(2rem,5vw,3.5rem)] font-extrabold tracking-tight leading-[1.1]",
+  2: "text-[clamp(1.5rem,4vw,2.25rem)] font-extrabold tracking-wide leading-[1.2]",
+  3: "text-[clamp(1.125rem,3vw,1.5rem)] font-bold tracking-normal leading-[1.3]",
 };
 
 export default function Heading({

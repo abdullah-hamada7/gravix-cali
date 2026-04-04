@@ -18,7 +18,7 @@ export default function Home() {
       <ContactForm />
       <Section className="border-t border-emerald/40 py-6" dark>
         <div className="flex flex-col gap-4 text-center md:flex-row md:items-center md:justify-between">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-lime">
+          <p className="text-xs font-semibold tracking-[0.2em] text-lime">
             جراڤيكس كاليستينكس
           </p>
           <div className="flex items-center gap-6">

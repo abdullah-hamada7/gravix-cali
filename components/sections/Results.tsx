@@ -12,7 +12,7 @@ export default function Results() {
   const { ref: refCards, animationClasses: animCards } = useInView({ threshold: 0.1, direction: "up" });
 
   return (
-    <Section id="results" eyebrow={results.eyebrow} dark>
+    <Section id="results" dark>
       <div ref={refHeading} className={animHeading}>
         <Heading level={2} className="mb-10">
             {results.title}
