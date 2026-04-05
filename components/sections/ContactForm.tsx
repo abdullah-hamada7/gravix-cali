@@ -250,7 +250,7 @@ export default function ContactForm() {
 
           <div>
             <label htmlFor="cf-goal" className="block text-neutral-mid text-xs font-semibold tracking-wider mb-1">
-              الهدف الأساسي <span className="text-lime">*</span>
+              ما الهدف الذي تريد الوصول له؟ <span className="text-lime">*</span>
             </label>
             <input
               id="cf-goal"
@@ -262,7 +262,7 @@ export default function ContactForm() {
               }}
               onBlur={() => handleBlur("goal")}
               maxLength={200}
-              placeholder="مثال: أول عضلة أب، وقوف على اليدين، قوة"
+              placeholder="مثال: أول Muscle-up، تحسين Handstand، زيادة القوة"
               className={fieldClass("goal")}
               aria-invalid={!!fieldErrors.goal}
               aria-describedby={fieldErrors.goal ? "cf-goal-error" : undefined}
