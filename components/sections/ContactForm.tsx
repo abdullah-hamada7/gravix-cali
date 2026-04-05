@@ -207,7 +207,6 @@ export default function ContactForm() {
               maxLength={20}
               autoComplete="tel"
               inputMode="tel"
-              placeholder="01234567890"
               required
               className={fieldClass("mobile")}
               aria-invalid={!!fieldErrors.mobile}
