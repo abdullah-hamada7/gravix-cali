@@ -1,6 +1,6 @@
 export type FormFieldErrors = {
   name?: string;
-  email?: string;
+  mobile?: string;
   trainingLevel?: string;
   goal?: string;
 };
@@ -12,6 +12,8 @@ export type FormStatus =
   | "success"
   | "error";
 
+const EGYPTIAN_MOBILE_REGEX = /^(?:\+20|20|0)?1[0125]\d{8}$/;
+
 export function validateField(
   name: string,
   value: string
@@ -20,10 +22,10 @@ export function validateField(
     case "name":
       if (!value.trim()) return "اكتب اسمك هنا.";
       return undefined;
-    case "email":
-      if (!value.trim()) return "اكتب بريدك الإلكتروني.";
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
-        return "البريد غير صحيح. مثال: name@example.com";
+    case "mobile":
+      if (!value.trim()) return "اكتب رقم الموبايل.";
+      if (!EGYPTIAN_MOBILE_REGEX.test(value.replace(/[\s-]/g, "")))
+        return "رقم الموبايل غير صحيح. مثال: 01234567890 أو +201234567890";
       return undefined;
     case "trainingLevel":
       if (!value) return "اختر مستواك الحالي.";
@@ -38,14 +40,14 @@ export function validateField(
 
 export function validateForm(values: {
   name: string;
-  email: string;
+  mobile: string;
   trainingLevel: string;
   goal: string;
 }): FormFieldErrors {
   const errors: FormFieldErrors = {};
 
   errors.name = validateField("name", values.name);
-  errors.email = validateField("email", values.email);
+  errors.mobile = validateField("mobile", values.mobile);
   errors.trainingLevel = validateField("trainingLevel", values.trainingLevel);
   errors.goal = validateField("goal", values.goal);
 
