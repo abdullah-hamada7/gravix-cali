@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  hasErrors,
+  validateForm,
+  type LeadFormValues,
+} from "@/lib/validation";
 
-const EGYPTIAN_MOBILE_REGEX = /^(?:\+20|20|0)?1[0125]\d{8}$/;
+const WEBHOOK_TIMEOUT_MS = 10000;
+
+function jsonError(error: string, status: number) {
+  return NextResponse.json({ error }, { status });
+}
 
 function normalizeEgyptianMobile(value: string) {
   const digits = value.replace(/[\s-]/g, "");
@@ -20,85 +29,98 @@ function normalizeEgyptianMobile(value: string) {
   return `+20${digits}`;
 }
 
+function parseLeadForm(body: unknown): LeadFormValues {
+  const data = typeof body === "object" && body !== null ? body : {};
+
+  return {
+    name: typeof (data as Record<string, unknown>).name === "string"
+      ? (data as Record<string, string>).name.trim()
+      : "",
+    mobile: typeof (data as Record<string, unknown>).mobile === "string"
+      ? (data as Record<string, string>).mobile.trim()
+      : "",
+    trainingLevel:
+      typeof (data as Record<string, unknown>).trainingLevel === "string"
+        ? (data as Record<string, string>).trainingLevel.trim()
+        : "",
+    goal: typeof (data as Record<string, unknown>).goal === "string"
+      ? (data as Record<string, string>).goal.trim()
+      : "",
+    message: typeof (data as Record<string, unknown>).message === "string"
+      ? (data as Record<string, string>).message.trim()
+      : "",
+  };
+}
+
 export async function POST(request: NextRequest) {
   const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
 
   if (!webhookUrl) {
-    return NextResponse.json(
-      { error: "Google Sheets webhook not configured" },
-      { status: 500 }
-    );
+    return jsonError("Google Sheets webhook not configured", 500);
   }
 
   try {
-    const body = await request.json();
-    const { name, mobile, trainingLevel, goal, message } = body;
-    const trimmedName = typeof name === "string" ? name.trim() : "";
-    const trimmedMobile = typeof mobile === "string" ? mobile.trim() : "";
-    const trimmedTrainingLevel = typeof trainingLevel === "string" ? trainingLevel.trim() : "";
-    const trimmedGoal = typeof goal === "string" ? goal.trim() : "";
-    const trimmedMessage = typeof message === "string" ? message.trim() : "";
-    const normalizedMobile = normalizeEgyptianMobile(trimmedMobile);
+    const form = parseLeadForm(await request.json());
+    const errors = validateForm(form);
 
-    if (!trimmedName || !trimmedMobile || !trimmedTrainingLevel || !trimmedGoal) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
-    }
-
-    if (!EGYPTIAN_MOBILE_REGEX.test(trimmedMobile.replace(/[\s-]/g, ""))) {
-      return NextResponse.json(
-        { error: "Invalid mobile" },
-        { status: 400 }
-      );
+    if (hasErrors(errors)) {
+      return jsonError("Invalid lead payload", 400);
     }
 
     const response = await fetch(webhookUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      signal: AbortSignal.timeout(WEBHOOK_TIMEOUT_MS),
       body: JSON.stringify({
-        name: trimmedName,
-        mobile: normalizedMobile,
-        trainingLevel: trimmedTrainingLevel,
-        goal: trimmedGoal,
-        message: trimmedMessage,
+        ...form,
+        mobile: normalizeEgyptianMobile(form.mobile),
       }),
     });
 
     if (!response.ok) {
-      return NextResponse.json(
-        { error: "تعذر الوصول إلى Google Sheets webhook. تأكد أن رابط Apps Script صحيح ومتاح كـ Web App." },
-        { status: 502 }
+      return jsonError(
+        "تعذر الوصول إلى Google Sheets webhook. تأكد أن رابط Apps Script صحيح ومتاح كـ Web App.",
+        502
       );
     }
 
     const responseText = await response.text();
 
     if (typeof responseText === "string" && /google drive|docs-drivelogo|drive\.google/i.test(responseText)) {
-      return NextResponse.json(
-        {
-          error:
-            "رابط Google Apps Script الحالي غير متاح للعامة. أعد نشره كـ Web App واختر Anyone ثم استخدم رابط /exec في متغير GOOGLE_SHEETS_WEBHOOK_URL.",
-        },
-        { status: 502 }
+      return jsonError(
+        "رابط Google Apps Script الحالي غير متاح للعامة. أعد نشره كـ Web App واختر Anyone ثم استخدم رابط /exec في متغير GOOGLE_SHEETS_WEBHOOK_URL.",
+        502
       );
     }
 
-    const result = JSON.parse(responseText || "null");
+    let result: { error?: string; success?: boolean } | null = null;
+
+    try {
+      result = JSON.parse(responseText || "null");
+    } catch {
+      return jsonError(
+        "Google Sheets webhook returned an invalid response. راجع Apps Script deployment.",
+        502
+      );
+    }
 
     if (!result || result.error || result.success !== true) {
-      return NextResponse.json(
-        { error: "Google Sheets webhook رفض حفظ الطلب. راجع إعدادات Apps Script واسم الشيت." },
-        { status: 502 }
+      return jsonError(
+        result?.error || "Google Sheets webhook رفض حفظ الطلب. راجع إعدادات Apps Script واسم الشيت.",
+        502
       );
     }
 
     return NextResponse.json({ success: true });
-  } catch {
-    return NextResponse.json(
-      { error: "Failed to save lead" },
-      { status: 500 }
-    );
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      return jsonError("Invalid JSON body", 400);
+    }
+
+    if (error instanceof Error && error.name === "TimeoutError") {
+      return jsonError("انتهت مهلة الاتصال بـ Google Sheets webhook. حاول مرة أخرى.", 504);
+    }
+
+    return jsonError("Failed to save lead", 500);
   }
 }

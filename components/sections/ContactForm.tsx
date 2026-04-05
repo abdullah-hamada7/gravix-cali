@@ -7,8 +7,8 @@ import Section from "@/components/ui/Section";
 import { landingContent } from "@/content/landing-page";
 import {
   validateForm,
-  validateField,
   hasErrors,
+  type LeadFormValues,
   type FormFieldErrors,
   type FormStatus,
 } from "@/lib/validation";
@@ -23,19 +23,31 @@ export default function ContactForm() {
   const [goal, setGoal] = useState("");
   const [message, setMessage] = useState("");
 
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [touched, setTouched] = useState<Partial<Record<keyof LeadFormValues, boolean>>>({});
 
   const [status, setStatus] = useState<FormStatus>("idle");
   const [fieldErrors, setFieldErrors] = useState<FormFieldErrors>({});
   const [globalMessage, setGlobalMessage] = useState("");
 
-  const validateAndSetError = (fieldName: string, value: string) => {
-    const error = validateField(fieldName, value);
-    setFieldErrors((prev) => ({ ...prev, [fieldName]: error }));
+  const getFormValues = (
+    overrides: Partial<LeadFormValues> = {}
+  ): LeadFormValues => ({
+    name,
+    mobile,
+    trainingLevel,
+    goal,
+    message,
+    ...overrides,
+  });
+
+  const validateAndSetError = (fieldName: keyof LeadFormValues, value: string) => {
+    const errors = validateForm(getFormValues({ [fieldName]: value }));
+    setFieldErrors(errors);
   };
 
-  const handleBlur = (fieldName: string) => {
+  const handleBlur = (fieldName: keyof LeadFormValues) => {
     setTouched((prev) => ({ ...prev, [fieldName]: true }));
+    validateAndSetError(fieldName, getFormValues()[fieldName]);
   };
 
   const { ref: refHeading, animationClasses: animHeading } = useInView({ threshold: 0.2 });
@@ -43,9 +55,17 @@ export default function ContactForm() {
   const { ref: refMap, animationClasses: animMap } = useInView({ threshold: 0.1 });
 
   const scrollToFirstError = (errors: FormFieldErrors) => {
+    const fieldIdMap: Record<string, string> = {
+      name: "cf-name",
+      mobile: "cf-mobile",
+      trainingLevel: "cf-level",
+      goal: "cf-goal",
+      message: "cf-message",
+    };
+
     const errorField = Object.keys(errors).find((key) => errors[key as keyof FormFieldErrors]);
     if (errorField) {
-      const fieldId = `cf-${errorField === "trainingLevel" ? "level" : errorField}`;
+      const fieldId = fieldIdMap[errorField];
       const el = document.getElementById(fieldId);
       el?.focus();
       el?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -55,7 +75,7 @@ export default function ContactForm() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const errors = validateForm({ name, mobile, trainingLevel, goal });
+    const errors = validateForm(getFormValues());
     setFieldErrors(errors);
 
     if (hasErrors(errors)) {
@@ -64,8 +84,9 @@ export default function ContactForm() {
         mobile: true,
         trainingLevel: true,
         goal: true,
+        message: true,
       });
-      setStatus("validating");
+      setStatus("error");
       setGlobalMessage("هناك بعض الحقول التي تحتاج تعديل. راجع الأخطاء أدناه.");
       scrollToFirstError(errors);
       return;
@@ -85,17 +106,7 @@ export default function ContactForm() {
         const result = await response.json().catch(() => null);
         throw new Error(result?.error || "Failed to save lead");
       }
-    } catch (error) {
-      setStatus("error");
-      setGlobalMessage(
-        error instanceof Error
-          ? error.message
-          : "حدث خطأ أثناء حفظ البيانات. تأكد من اتصالك بالإنترنت وحاول مرة أخرى."
-      );
-      return;
-    }
 
-    try {
       setStatus("success");
       setGlobalMessage(
         "تم استلام طلبك بنجاح. سأتواصل معك خلال 48 ساعة."
@@ -105,10 +116,14 @@ export default function ContactForm() {
       setTrainingLevel("");
       setGoal("");
       setMessage("");
+      setFieldErrors({});
+      setTouched({});
     } catch (error) {
       setStatus("error");
       setGlobalMessage(
-        "حدث خطأ. تأكد من اتصالك بالإنترنت وحاول مرة أخرى."
+        error instanceof Error
+          ? error.message
+          : "حدث خطأ أثناء حفظ البيانات. تأكد من اتصالك بالإنترنت وحاول مرة أخرى."
       );
     }
   };
@@ -135,6 +150,7 @@ export default function ContactForm() {
           <div className="border border-lime bg-forest p-8 max-w-lg mx-auto">
             <p className="text-neutral-light text-sm mb-6">{globalMessage}</p>
             <button
+              type="button"
               onClick={handleReset}
               className="text-lime text-sm font-semibold hover:text-limeBright transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-lime"
             >
@@ -272,6 +288,7 @@ export default function ContactForm() {
               onBlur={() => handleBlur("goal")}
               maxLength={200}
               placeholder="مثال: أول Muscle-up، تحسين Handstand، زيادة القوة"
+              required
               className={fieldClass("goal")}
               aria-invalid={!!fieldErrors.goal}
               aria-describedby={fieldErrors.goal ? "cf-goal-error" : undefined}
@@ -290,11 +307,22 @@ export default function ContactForm() {
             <textarea
               id="cf-message"
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) => {
+                setMessage(e.target.value);
+                if (touched.message) validateAndSetError("message", e.target.value);
+              }}
+              onBlur={() => handleBlur("message")}
               maxLength={500}
-              className={`${fieldClass("name")} resize-none`}
+              className={`${fieldClass("message")} resize-none`}
               rows={4}
+              aria-invalid={!!fieldErrors.message}
+              aria-describedby={fieldErrors.message ? "cf-message-error" : undefined}
             />
+            {fieldErrors.message && touched.message && (
+              <p id="cf-message-error" className="text-red-300 text-xs mt-1" role="alert">
+                {fieldErrors.message}
+              </p>
+            )}
           </div>
 
           <Button
