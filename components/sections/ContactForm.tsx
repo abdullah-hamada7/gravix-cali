@@ -59,6 +59,12 @@ export default function ContactForm() {
     setFieldErrors(errors);
 
     if (hasErrors(errors)) {
+      setTouched({
+        name: true,
+        mobile: true,
+        trainingLevel: true,
+        goal: true,
+      });
       setStatus("validating");
       setGlobalMessage("هناك بعض الحقول التي تحتاج تعديل. راجع الأخطاء أدناه.");
       scrollToFirstError(errors);
@@ -76,12 +82,15 @@ export default function ContactForm() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save lead");
+        const result = await response.json().catch(() => null);
+        throw new Error(result?.error || "Failed to save lead");
       }
-    } catch {
+    } catch (error) {
       setStatus("error");
       setGlobalMessage(
-        "حدث خطأ أثناء حفظ البيانات. تأكد من اتصالك بالإنترنت وحاول مرة أخرى."
+        error instanceof Error
+          ? error.message
+          : "حدث خطأ أثناء حفظ البيانات. تأكد من اتصالك بالإنترنت وحاول مرة أخرى."
       );
       return;
     }

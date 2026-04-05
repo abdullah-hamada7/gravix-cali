@@ -68,16 +68,28 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       return NextResponse.json(
-        { error: "Sheets webhook request failed" },
+        { error: "تعذر الوصول إلى Google Sheets webhook. تأكد أن رابط Apps Script صحيح ومتاح كـ Web App." },
         { status: 502 }
       );
     }
 
-    const result = await response.json().catch(() => null);
+    const responseText = await response.text();
+
+    if (typeof responseText === "string" && /google drive|docs-drivelogo|drive\.google/i.test(responseText)) {
+      return NextResponse.json(
+        {
+          error:
+            "رابط Google Apps Script الحالي غير متاح للعامة. أعد نشره كـ Web App واختر Anyone ثم استخدم رابط /exec في متغير GOOGLE_SHEETS_WEBHOOK_URL.",
+        },
+        { status: 502 }
+      );
+    }
+
+    const result = JSON.parse(responseText || "null");
 
     if (!result || result.error || result.success !== true) {
       return NextResponse.json(
-        { error: "Sheets webhook rejected the lead" },
+        { error: "Google Sheets webhook رفض حفظ الطلب. راجع إعدادات Apps Script واسم الشيت." },
         { status: 502 }
       );
     }
