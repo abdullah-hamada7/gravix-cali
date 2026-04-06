@@ -29,6 +29,7 @@ export type LandingContent = {
   };
   about: {
     eyebrow: string;
+    coachName: string;
     title: string;
     story: string;
     philosophy: string;
@@ -73,6 +74,7 @@ export const landingContent: LandingContent = {
   },
   about: {
     eyebrow: "المدرب",
+    coachName: "محمد الخولي",
     title: "خبرة حقيقية في التدريب والمنافسة داخل Calisthenics",
     story:
       "أنا بشتغل مع الناس اللي عايزة تتقدم فعلاً في Calisthenics، سواء هدفها قوة أساسية، تحسين الفورم، أو الوصول لمهارات زي Handstand و Muscle-up. رحلتي في المجال لم تكن مجرد تدريب شخصي، لكنها مبنية أيضًا على المنافسة والخبرة العملية مع لاعبين بمستويات مختلفة.",

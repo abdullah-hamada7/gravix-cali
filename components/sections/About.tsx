@@ -14,6 +14,9 @@ export default function About() {
       <div ref={refText} className={animText}>
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-10 lg:gap-14 items-start">
           <div>
+            <p className="text-lime text-sm font-semibold tracking-[0.15em] mb-2">
+              {about.coachName}
+            </p>
             <Heading level={2} className="mb-6">
               {about.title}
             </Heading>
